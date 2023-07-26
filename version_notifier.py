@@ -36,7 +36,7 @@ GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
 DATA_FOLDER_PATH = os.getenv('DATA_FOLDER_PATH', os.path.join(os.path.expanduser('~'), '.apps/version-notifier'))
 
 # Static values
-NOTIFICATION_SUBJECT = "<b>Tautulli (Flying Dutchman)</b>"
+NOTIFICATION_SUBJECT = "<b>Tautulli (Black Pearl)</b>"
 GITHUB_HEADERS = {
         "Authorization": (f"Bearer {GITHUB_TOKEN}") if GITHUB_TOKEN else None,
         "Accept": "application/vnd.github.v3+json"
