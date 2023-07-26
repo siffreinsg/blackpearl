@@ -26,35 +26,19 @@ import time
 
 import dotenv
 import requests
-
-# Config
-services = [
-    {"name": "Bazarr", "repo": "linuxserver/docker-bazarr", "branch": "master"},
-    {"name": "File Browser", "repo": "filebrowser/filebrowser", "branch": "master"},
-    {"name": "Overseerr", "repo": "linuxserver/docker-overseerr", "branch": "master"},
-    {"name": "Plex", "repo": "linuxserver/docker-plex", "branch": "master"},
-    {"name": "Prowlarr", "repo": "linuxserver/docker-prowlarr", "branch": "master"},
-    {"name": "Radarr", "repo": "linuxserver/docker-radarr", "branch": "master"},
-    {"name": "Sonarr", "repo": "linuxserver/docker-sonarr", "branch": "develop"},
-    {"name": "Syncthing", "repo": "linuxserver/docker-syncthing", "branch": "master"},
-    # {"name": "FlareSolverr", "repo": "FlareSolverr/FlareSolverr", "branch": "master"},
-    {"name": "Tautulli", "repo": "linuxserver/docker-tautulli", "branch": "master"},
-    {"name": "Recyclarr", "repo": "recyclarr/recyclarr", "branch": "master"},
-    {"name": "VueTorrent", "repo": "WDaan/VueTorrent", "branch": "master"},
-]
+import yaml
 
 # Load environment variables
 dotenv.load_dotenv()
 TAUTULLI_URL = os.getenv('TAUTULLI_URL')
 TAUTULLI_APIKEY = os.getenv('TAUTULLI_APIKEY')
 GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
-DATA_FOLDER_PATH = os.path.join(os.path.expanduser('~'), '.apps/version-notifier')
-DATA_FOLDER_PATH = os.getenv('DATA_FOLDER_PATH', DATA_FOLDER_PATH)
+DATA_FOLDER_PATH = os.getenv('DATA_FOLDER_PATH', os.path.join(os.path.expanduser('~'), '.apps/version-notifier'))
 
 # Static values
 NOTIFICATION_SUBJECT = "<b>Tautulli (Flying Dutchman)</b>"
 GITHUB_HEADERS = {
-        "Authorization": f"Bearer {GITHUB_TOKEN}",
+        "Authorization": (f"Bearer {GITHUB_TOKEN}") if GITHUB_TOKEN else None,
         "Accept": "application/vnd.github.v3+json"
     }
 GITHUB_PARAMS = {"per_page": 15}
@@ -66,8 +50,22 @@ def initiate_data_store():
     if not os.path.isdir(DATA_FOLDER_PATH): # If not a directory
         raise Exception(f"{DATA_FOLDER_PATH} is not a directory.") # Raise an error
 
+
+def load_services():
+    filepath = os.path.join(DATA_FOLDER_PATH, "services.yml")
+    try:
+        with open(filepath, "r") as f:
+            return yaml.safe_load(f)
+    except FileNotFoundError:
+        raise Exception("services.yml not found.")
+    except yaml.YAMLError as e:
+        raise Exception(f"Error while parsing services.yaml: {e}")
+    except Exception as e:
+        raise Exception(f"Error while loading services.yaml: {e}")
+
+
 def get_version_file(service):
-    filename = f"version-{service['name'].lower().replace(' ', '_')}.txt"
+    filename = f"version-{service['label']}.txt"
     filepath = os.path.join(DATA_FOLDER_PATH, filename)
 
     if not os.path.exists(filepath):
@@ -78,7 +76,7 @@ def get_version_file(service):
 
 
 def update_version_file(service, version):
-    filename = f"version-{service['name'].lower().replace(' ', '_')}.txt"
+    filename = f"version-{service['label']}.txt"
     filepath = os.path.join(DATA_FOLDER_PATH, filename)
 
     with open(filepath, "w") as f:
@@ -132,31 +130,32 @@ if __name__ == '__main__':
     opts = parser.parse_args()
 
     initiate_data_store() # Create the data folder if it doesn't exist
+    services = load_services() # Load the services to check
 
     for service in services: # For each service
-        name, repo, branch = service["name"], service["repo"], service["branch"]
-        print(f"Checking updates for {name} ({repo} on {branch})...")
+        label, display_name, repo, branch = service["label"], service["display_name"], service["repo"], service["branch"]
+        print(f"Checking updates for {display_name} ({repo} on {branch})...")
 
         try:
             release = check_app_update(service)
         except Exception as e:
-            print(f"Error while checking updates for {name}: {e}")
+            print(f"Error while checking updates for {display_name}: {e}")
             notify_tautulli(
                 opts.notifier_id,
-                f"Erreur lors de la recherche de mises à jour de {name}: <pre language=\"python\">{e}</pre>"
+                f"Erreur lors de la recherche de mises à jour de {display_name}: <pre language=\"python\">{e}</pre>"
             )
         else:
             if not release:
-                print(f"No update found for {name}.")
+                print(f"No update found for {display_name}.")
                 continue
 
             version = release.get("tag_name")
-            print(f"Update found for {name}: {version}.")
+            print(f"Update found for {display_name}: {version}.")
             update_version_file(service, version)
 
             notify_tautulli(
                 opts.notifier_id,
-                f"Mise à jour de {name} à la version {version} disponible."
+                f"Mise à jour de {display_name} à la version {version} disponible."
             )
 
         if opts.cooldown:
