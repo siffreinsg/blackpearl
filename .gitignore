@@ -1,3 +1,6 @@
 *
 !.gitignore
+!version_notifier.py
 !list_apps.py
+!notify_disk_usage.py
+!Pipfile
