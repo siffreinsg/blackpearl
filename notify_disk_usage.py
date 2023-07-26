@@ -10,10 +10,10 @@ Tautulli script trigger:
    * Notify on recently added
 Tautulli script arguments:
    * Recently Added:
-        --homepath "/home/seedbox" --threshold 2500 --notifier_id 2 --subject "Tautulli" --body "Path {path} disk usage is {usage} GB exceeding threshold {threshold} GB."
+        --homepath "/home/seedbox" --threshold 2500 --notifier_id 2
 
 Usage:
-    python notify_disk_usage.py --homepath "/home/seedbox" --threshold 2500 --notifier_id 2 --subject "Tautulli" --body "Path {path} disk usage is {usage} GB exceeding threshold {threshold} GB."
+    python notify_disk_usage.py --homepath "/home/seedbox" --threshold 2500 --notifier_id 2
 '''
 
 import argparse
