@@ -38,7 +38,7 @@ DATA_FOLDER_PATH = os.getenv('DATA_FOLDER_PATH', os.path.join(os.path.expanduser
 # Static values
 NOTIFICATION_SUBJECT = "<b>Tautulli (Black Pearl)</b>"
 GITHUB_HEADERS = {
-        "Authorization": (f"Bearer {GITHUB_TOKEN}") if GITHUB_TOKEN else None,
+        "Authorization": f"Bearer {GITHUB_TOKEN}",
         "Accept": "application/vnd.github.v3+json"
     }
 GITHUB_PARAMS = {"per_page": 15}
