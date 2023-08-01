@@ -9,20 +9,18 @@ Requires:     requests
 Environment variables:
     TAUTULLI_URL            URL of your Tautulli instance.
     TAUTULLI_APIKEY         API key of your Tautulli instance.
-    GITHUB_TOKEN            GitHub token with access to the repos you want to check.
-    DATA_FOLDER_PATH        Path to the folder where the version files will be stored.
+    VN_GITHUB_TOKEN         GitHub token with access to the repos you want to check.
+    VN_DATA_FOLDER_PATH     Path to the folder where the data will be stored.
 
 Script arguments:
     --notifier_id [int]     Tautulli notifier ID to use for the notification.
-    --cooldown [int]        Cooldown between each service check (in seconds).
 
 Usage:
-    python VersionNotifier.py --notifier_id 1 --cooldown 1
+    python VersionNotifier.py --notifier_id 1
 '''
 
 import argparse
 import os
-import time
 
 import dotenv
 import requests
@@ -32,27 +30,31 @@ import yaml
 dotenv.load_dotenv()
 TAUTULLI_URL = os.getenv('TAUTULLI_URL')
 TAUTULLI_APIKEY = os.getenv('TAUTULLI_APIKEY')
-GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
-DATA_FOLDER_PATH = os.getenv('DATA_FOLDER_PATH', os.path.join(os.path.expanduser('~'), '.apps/version-notifier'))
+VN_GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
+VN_DATA_FOLDER_PATH = os.getenv('DATA_FOLDER_PATH', os.path.join(os.path.expanduser('~'), '.apps/version-notifier'))
 
 # Static values
 NOTIFICATION_SUBJECT = "<b>Tautulli (Black Pearl)</b>"
 GITHUB_HEADERS = {
-        "Authorization": f"Bearer {GITHUB_TOKEN}",
+        "Authorization": f"Bearer {VN_GITHUB_TOKEN}",
         "Accept": "application/vnd.github.v3+json"
     }
 GITHUB_PARAMS = {"per_page": 15}
 
 
 def initiate_data_store():
-    if not os.path.exists(DATA_FOLDER_PATH): # If the directory doesn't exist
-        return os.mkdir(DATA_FOLDER_PATH) # Create it
-    if not os.path.isdir(DATA_FOLDER_PATH): # If not a directory
-        raise Exception(f"{DATA_FOLDER_PATH} is not a directory.") # Raise an error
+    if not os.path.exists(VN_DATA_FOLDER_PATH): # If the directory doesn't exist
+        os.mkdir(VN_DATA_FOLDER_PATH) # Create it
+        print(f"Created data folder on path '{VN_DATA_FOLDER_PATH}'.")
+        return
+    if not os.path.isdir(VN_DATA_FOLDER_PATH): # If not a directory
+        raise Exception(f"{VN_DATA_FOLDER_PATH} is not a directory.") # Raise an error
 
 
 def load_services():
-    filepath = os.path.join(DATA_FOLDER_PATH, "services.yml")
+    filepath = os.path.join(VN_DATA_FOLDER_PATH, "services.yml")
+    print(f"Loading services from {filepath}...")
+
     try:
         with open(filepath, "r") as f:
             return yaml.safe_load(f)
@@ -66,7 +68,7 @@ def load_services():
 
 def get_version_file(service):
     filename = f"version-{service['label']}.txt"
-    filepath = os.path.join(DATA_FOLDER_PATH, filename)
+    filepath = os.path.join(VN_DATA_FOLDER_PATH, filename)
 
     if not os.path.exists(filepath):
         return None
@@ -77,7 +79,7 @@ def get_version_file(service):
 
 def update_version_file(service, version):
     filename = f"version-{service['label']}.txt"
-    filepath = os.path.join(DATA_FOLDER_PATH, filename)
+    filepath = os.path.join(VN_DATA_FOLDER_PATH, filename)
 
     with open(filepath, "w") as f:
         f.write(version)
@@ -98,7 +100,8 @@ def notify_tautulli(notifier_id, body):
 
 
 def check_app_update(service):
-    repo, target_branch = service["repo"], service["branch"]
+    repo = service['repo']
+    target_branch = service['branch'] if (branch in service) else 'master'
 
     response = requests.get(
         f"https://api.github.com/repos/{repo}/releases",
@@ -109,31 +112,24 @@ def check_app_update(service):
     if response.status_code != 200:
         raise Exception(f"Error {response.status_code} while fetching {response.url}.")
 
-    for release in response.json(): # For each release
-        branch = release.get("target_commitish")
-        if branch != target_branch: # If not the correct branch
-            continue # Skip
+    releases = [release for release in response.json() if release.get("target_commitish") == target_branch] # Get the releases for the target branch
+    latest = releases[0] # Get the latest release
 
-        last_version = get_version_file(service)
-        version = release.get("tag_name")
-
-        if version == last_version: # If the version is the same as the last one notified
-            return None # We reached the last notified version, no need to check further
-
-        return release # Return the release
-
+    last_version_notified = get_version_file(service) # Get the last version notified
+    if last_version_notified != latest.get("tag_name"): # If the latest version is different from the last version notified
+        return latest # Return the latest release
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--notifier_id', type=int, required=True)
-    parser.add_argument('--cooldown', type=int, required=False)
     opts = parser.parse_args()
 
     initiate_data_store() # Create the data folder if it doesn't exist
     services = load_services() # Load the services to check
 
     for service in services: # For each service
-        label, display_name, repo, branch = service["label"], service["display_name"], service["repo"], service["branch"]
+        label, display_name, repo = service["label"], service["display_name"], service["repo"]
+        branch = service["branch"] if ("branch" in service) else "master"
         print(f"Checking updates for {display_name} ({repo} on {branch})...")
 
         try:
@@ -157,6 +153,3 @@ if __name__ == '__main__':
                 opts.notifier_id,
                 f"Mise à jour de {display_name} à la version {version} disponible."
             )
-
-        if opts.cooldown:
-            time.sleep(opts.cooldown)
