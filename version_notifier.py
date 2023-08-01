@@ -52,14 +52,14 @@ def initiate_data_store():
 
 
 def load_services():
-    filepath = os.path.join(VN_DATA_FOLDER_PATH, "services.yml")
+    filepath = os.path.join(VN_DATA_FOLDER_PATH, "services.yaml")
     print(f"Loading services from {filepath}...")
 
     try:
         with open(filepath, "r") as f:
             return yaml.safe_load(f)
     except FileNotFoundError:
-        raise Exception("services.yml not found.")
+        raise Exception("services.yaml not found.")
     except yaml.YAMLError as e:
         raise Exception(f"Error while parsing services.yaml: {e}")
     except Exception as e:
