@@ -100,7 +100,8 @@ def notify_tautulli(notifier_id, body):
 
 
 def check_app_update(service):
-    repo, target_branch = service['repo'], service['branch']
+    repo = service['repo']
+    target_commitish = service['target_commitish'] if ("target_commitish" in service) else None
 
     response = requests.get(
         f"https://api.github.com/repos/{repo}/releases",
@@ -111,10 +112,10 @@ def check_app_update(service):
     if response.status_code != 200:
         raise Exception(f"Error {response.status_code} while fetching {response.url}.")
 
-    releases = [
-            release for release in response.json()
-            if release.get("target_commitish") == target_branch
-        ] # Get the releases for the target branch
+    releases = response.json()
+
+    if target_commitish:
+        releases = [release for release in releases if (release.get("target_commitish") == target_commitish)] # Get the releases for the target branch
 
     if len(releases) == 0:
         return None
@@ -133,8 +134,8 @@ if __name__ == '__main__':
     services = load_services() # Load the services to check
 
     for service in services: # For each service
-        label, display_name, repo, branch = service["label"], service["display_name"], service["repo"], service["branch"]
-        print(f"Checking updates for {display_name} ({repo} on {branch})...")
+        label, display_name, repo = service["label"], service["display_name"], service["repo"]
+        print(f"Checking updates for {display_name}...")
 
         try:
             release = check_app_update(service)
