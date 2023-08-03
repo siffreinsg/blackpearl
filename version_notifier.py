@@ -100,8 +100,7 @@ def notify_tautulli(notifier_id, body):
 
 
 def check_app_update(service):
-    repo = service['repo']
-    target_branch = service['branch'] if branch in service else None
+    repo, target_branch = service['repo'], service['branch']
 
     response = requests.get(
         f"https://api.github.com/repos/{repo}/releases",
@@ -114,10 +113,13 @@ def check_app_update(service):
 
     releases = [
             release for release in response.json()
-            if (not target_branch or release.get("target_commitish") == target_branch)
+            if release.get("target_commitish") == target_branch
         ] # Get the releases for the target branch
-    latest = releases[0] # Get the latest release
 
+    if len(releases) == 0:
+        return None
+
+    latest = releases[0] # Get the latest release
     last_version_notified = get_version_file(service) # Get the last version notified
     if last_version_notified != latest.get("tag_name"): # If the latest version is different from the last version notified
         return latest # Return the latest release
@@ -131,9 +133,8 @@ if __name__ == '__main__':
     services = load_services() # Load the services to check
 
     for service in services: # For each service
-        label, display_name, repo = service["label"], service["display_name"], service["repo"]
-        branch = service["branch"] if ("branch" in service) else None
-        print(f"Checking updates for {display_name}...")
+        label, display_name, repo, branch = service["label"], service["display_name"], service["repo"], service["branch"]
+        print(f"Checking updates for {display_name} ({repo} on {branch})...")
 
         try:
             release = check_app_update(service)
