@@ -4,7 +4,7 @@
 '''
 Description:  Checks for new releases of apps and sends a Tautulli notification.
 Author:       /u/siffreinsg
-Requires:     requests
+Requires:     dotenv, requests, PyYAML
 
 Environment variables:
     TAUTULLI_URL            URL of your Tautulli instance.
@@ -16,7 +16,7 @@ Script arguments:
     --notifier_id [int]     Tautulli notifier ID to use for the notification.
 
 Usage:
-    python VersionNotifier.py --notifier_id 1
+    python version_notifier.py --notifier_id 1
 '''
 
 import argparse
