@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # === CONFIG ===
-DOTNET_GCHeapHardLimit=10000000
+export DOTNET_GCHeapHardLimit=10000000
 export RECYCLARR_APP_DATA="$HOME/.apps/recyclarr/"
 # === END CONFIG ===
 
