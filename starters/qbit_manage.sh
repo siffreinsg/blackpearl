@@ -13,4 +13,6 @@ PYTHON_PATH="/home/siffreinsg/.pyenv/shims/"
 # === MAIN SCRIPT ===
 cd "$APP_DIR" || exit 1
 
+echo "" >config/logs/qbit_manage.log # Reset log file
+
 "$PYTHON_PATH"/python qbit_manage.py --config-file="$CONFIG_PATH" --run $@
