@@ -1,10 +1,10 @@
 radarr:
-  sqp5:
+  sqp:
     base_url: https://siffreinsg.ghost.usbx.me/radarr2
     api_key: !secret radarr_sqp_apikey
     quality_definition:
       type: sqp-uhd
-    delete_old_custom_formats: true
+    delete_old_custom_formats: false # Keep this false
     replace_existing_custom_formats: true
     quality_profiles:
       - name: Bluray|IMAX-E|2160p [SQP5]
