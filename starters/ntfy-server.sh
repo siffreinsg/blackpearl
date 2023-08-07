@@ -9,6 +9,6 @@ APP_DIR="$HOME/.apps/ntfy"
 # === END LOCK ===
 
 # === MAIN SCRIPT ===
-cd "$APP_DIR" || (echo "Failed to change directory." && exit 1)
+cd "$APP_DIR" || exit 1
 
 ./ntfy $1 --config "$APP_DIR/server.yml" "${@:2}"

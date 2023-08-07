@@ -10,6 +10,6 @@ export RECYCLARR_APP_DATA="$HOME/.apps/recyclarr/"
 # === END LOCK ===
 
 # === MAIN SCRIPT ===
-cd "$RECYCLARR_APP_DATA" || (echo "Failed to change directory." && exit 1)
+cd "$RECYCLARR_APP_DATA" || exit 1
 
 ./recyclarr "$@"

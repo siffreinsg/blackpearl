@@ -12,7 +12,7 @@ APP_DATA="$HOME/.apps/recyclarr/"
 echo "Updating Recyclarr..."
 
 mkdir -p "$APP_DATA" || (echo "Failed to create directory." && exit 1)
-cd "$APP_DATA" || (echo "Failed to change directory." && exit 1)
+cd "$APP_DATA" || exit 1
 
 # Delete the old version
 rm -f recyclarr || echo "No old version found, skipping."

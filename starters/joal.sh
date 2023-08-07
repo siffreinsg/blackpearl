@@ -18,7 +18,7 @@ source "$SCRIPTPATH/../.env"
 # === END LOCK ===
 
 # === MAIN SCRIPT ===
-cd "$APP_DIR" || (echo "Failed to change directory." && exit 1)
+cd "$APP_DIR" || exit 1
 
 /usr/bin/java -jar "$APP_DIR/joal.jar" --joal-conf="$APP_DIR" \
     --spring.main.web-environment=true \

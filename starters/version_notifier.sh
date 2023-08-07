@@ -10,6 +10,6 @@ PYTHON_PATH="/home/siffreinsg/.pyenv/shims/"
 # === END LOCK ===
 
 # === MAIN SCRIPT ===
-cd "$APP_DIR" || (echo "Failed to change directory." && exit 1)
+cd "$APP_DIR" || exit 1
 
 "$PYTHON_PATH"/python version_notifier.py --notifier_id 2
