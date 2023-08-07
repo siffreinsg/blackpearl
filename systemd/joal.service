@@ -1,0 +1,15 @@
+[Unit]
+Description=joal service
+
+[Service]
+Type=simple
+ExecStart=/home/siffreinsg/scripts/starters/joal.sh
+ExecStop=/bin/kill -s QUIT $MAINPID
+LimitNOFILE=10000
+
+[Install]
+WantedBy=default.target
+
+[Unit]
+Wants=network-online.target
+After=network-online.target
