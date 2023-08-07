@@ -6,12 +6,12 @@ APP_DIR="/home/siffreinsg/.apps/joal"
 export JAVA_TOOL_OPTIONS="-Xms64m -Xmx256m -XX:CompressedClassSpaceSize=256m -XX:MaxMetaspaceSize=256m -XX:MaxRAM=512m -XX:MaxRAMPercentage=70 -XX:ActiveProcessorCount=1"
 # === END CONFIG ===
 
-# === ENV ===
+# === ENVIRONMENT ===
 SCRIPT=$(realpath "$0")
 SCRIPTPATH=$(dirname "$SCRIPT")
 
 source "$SCRIPTPATH/../.env"
-# === END ENV ===
+# === END ENVIRONMENT ===
 
 # === LOCK ===
 # To be implemented...

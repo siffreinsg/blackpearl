@@ -1,9 +1,16 @@
 #! /bin/bash
 
 # === CONFIG ===
-APP_DIR="$HOME/.apps/version_notifier/"
-PYTHON_PATH="/home/siffreinsg/.pyenv/shims/"
+APP_DIR="$HOME/.apps/version-notifier"
+PYTHON_PATH="/home/siffreinsg/.pyenv/shims"
 # === END CONFIG ===
+
+# === ENVIRONMENT ===
+SCRIPT=$(realpath "$0")
+SCRIPTPATH=$(dirname "$SCRIPT")
+
+PYTHON_SCRIPT="$SCRIPTPATH/../version_notifier.py"
+# === END ENVIRONMENT ===
 
 # === LOCK ===
 # To be implemented...
@@ -12,4 +19,4 @@ PYTHON_PATH="/home/siffreinsg/.pyenv/shims/"
 # === MAIN SCRIPT ===
 cd "$APP_DIR" || exit 1
 
-"$PYTHON_PATH"/python version_notifier.py --notifier_id 2
+"$PYTHON_PATH"/python "$PYTHON_SCRIPT" --notifier_id 2
