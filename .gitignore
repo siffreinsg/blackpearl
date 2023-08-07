@@ -1,4 +1,5 @@
 .venv
 .env
 version-notifier/
+streaming-tag/
 recyclarr/secrets.yml

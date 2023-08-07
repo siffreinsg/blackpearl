@@ -30,13 +30,13 @@ import yaml
 dotenv.load_dotenv()
 TAUTULLI_URL = os.getenv('TAUTULLI_URL')
 TAUTULLI_APIKEY = os.getenv('TAUTULLI_APIKEY')
-VN_GITHUB_TOKEN = os.getenv('VN_GITHUB_TOKEN')
+GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
 VN_DATA_FOLDER_PATH = os.getenv('VN_DATA_FOLDER_PATH', os.path.join(os.path.expanduser('~'), '.apps/version-notifier'))
 
 # Static values
 NOTIFICATION_SUBJECT = "<b>Tautulli (Black Pearl)</b>"
 GITHUB_HEADERS = {
-        "Authorization": f"Bearer {VN_GITHUB_TOKEN}",
+        "Authorization": f"Bearer {GITHUB_TOKEN}",
         "Accept": "application/vnd.github.v3+json"
     }
 GITHUB_PARAMS = {"per_page": 15}
