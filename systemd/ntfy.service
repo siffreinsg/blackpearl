@@ -3,10 +3,8 @@ Description=ntfy server
 
 [Service]
 Type=simple
-ExecStart=/home/siffreinsg/scripts/starters/ntfy-server.sh serve
+ExecStart=/home/siffreinsg/blackpearl/starters/ntfy-server.sh serve
 ExecStop=/bin/kill -s QUIT $MAINPID
-#PrivateTmp=true
-#AmbientCapabilities=CAP_NET_BIND_SERVICE
 LimitNOFILE=10000
 
 [Install]

@@ -3,7 +3,7 @@ Description=joal service
 
 [Service]
 Type=simple
-ExecStart=/home/siffreinsg/scripts/starters/joal.sh
+ExecStart=/home/siffreinsg/blackpearl/starters/joal.sh
 ExecStop=/bin/kill -s QUIT $MAINPID
 LimitNOFILE=10000
 
