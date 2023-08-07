@@ -9,7 +9,7 @@ PYTHON_PATH="/home/siffreinsg/.pyenv/shims"
 SCRIPT=$(realpath "$0")
 SCRIPTPATH=$(dirname "$SCRIPT")
 
-PYTHON_SCRIPT="$SCRIPTPATH/../version_notifier.py"
+PYTHON_SCRIPT="$SCRIPTPATH/../python/version_notifier.py"
 # === END ENVIRONMENT ===
 
 # === LOCK ===
