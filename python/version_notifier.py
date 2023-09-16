@@ -9,7 +9,7 @@ Requires:     dotenv, requests, PyYAML
 Environment variables:
     TAUTULLI_URL            URL of your Tautulli instance.
     TAUTULLI_APIKEY         API key of your Tautulli instance.
-    VN_GITHUB_TOKEN         GitHub token with access to the repos you want to check.
+    GITHUB_TOKEN         GitHub token with access to the repos you want to check.
     VN_DATA_FOLDER_PATH     Path to the folder where the data will be stored.
 
 Script arguments:

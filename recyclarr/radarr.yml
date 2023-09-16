@@ -5,11 +5,11 @@ radarr:
     api_key: !secret radarr_lq_apikey
     quality_definition:
       type: movie
-    delete_old_custom_formats: # Keep this false
+    delete_old_custom_formats: false # Keep this false
     replace_existing_custom_formats: true
     quality_profiles:
       - name: HD - MULTi
-        reset_unmatched_scores: true
+        reset_unmatched_scores: false
     custom_formats:
       # =================================
       # HD Bluray + WEB
