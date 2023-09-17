@@ -38,7 +38,8 @@ NOTIFICATION_SUBJECT = '<b>Disk Usage</b>'
 
 def notify_tautulli(body):
     if not TAUTULLI_URL or not TAUTULLI_APIKEY or not TAUTULLI_NOTIFIER_ID:
-        raise ValueError('Tautulli URL, API key or notifier ID not set.')
+        print('Tautulli URL, API key or notifier ID not set. Not sending notification.')
+        return
 
     params = {
         "apikey": TAUTULLI_APIKEY,

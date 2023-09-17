@@ -7,11 +7,11 @@ Author:       /u/siffreinsg
 Requires:     dotenv, requests, PyYAML
 
 Environment variables:
-    TAUTULLI_URL - Tautulli URL
-    TAUTULLI_APIKEY - Tautulli API key
-    TAUTULLI_NOTIFIER_ID - Tautulli notifier ID
-    GITHUB_TOKEN - GitHub token
-    VN_DATA_FOLDER_PATH - Path to the data folder (default: ~/.apps/version-notifier)
+    * TAUTULLI_URL - Tautulli URL, e.g. http://localhost:8181
+    * TAUTULLI_APIKEY - Tautulli API key
+    * TAUTULLI_NOTIFIER_ID - Tautulli notifier ID for the script notification agent
+    * GITHUB_TOKEN - GitHub token, see https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token
+    * VN_DATA_FOLDER_PATH - Path to store data, default is ~/.apps/version-notifier
 
 Usage:
     python version_notifier.py
@@ -84,7 +84,8 @@ def update_version_file(service, version):
 
 def notify_tautulli(body):
     if not TAUTULLI_URL or not TAUTULLI_APIKEY or not TAUTULLI_NOTIFIER_ID:
-        raise ValueError('Tautulli URL, API key or notifier ID not set.')
+        print('Tautulli URL, API key or notifier ID not set. Not sending notification.')
+        return
 
     params = {
         "apikey": TAUTULLI_APIKEY,

@@ -6,6 +6,11 @@ Description:  Send a Tautulli notification from command line
 Author:       /u/siffreinsg
 Requires:     requests
 
+Environment variables:
+    * TAUTULLI_URL - Tautulli URL, e.g. http://localhost:8181
+    * TAUTULLI_APIKEY - Tautulli API key
+    * TAUTULLI_NOTIFIER_ID - Tautulli notifier ID for the script notification agent
+
 Usage:
     echo "Hello world!" | python tautulli_notify.py --notifier_id 2
 '''

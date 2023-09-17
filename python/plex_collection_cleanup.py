@@ -1,3 +1,22 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+'''
+Description:  Deletes empty collections from Plex
+Author:       /u/siffreinsg
+Requires:     dotenv, requests, plexapi
+
+Environment variables:
+    * TAUTULLI_URL - Tautulli URL, e.g. http://localhost:8181
+    * TAUTULLI_APIKEY - Tautulli API key
+    * TAUTULLI_NOTIFIER_ID - Tautulli notifier ID for the script notification agent
+    * PLEX_URL - Plex URL, e.g. http://localhost:32400
+    * PLEX_TOKEN - Plex authentification token, see https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/
+
+Usage:
+    python plex_collection_cleanup.py
+'''
+
 import os
 
 import dotenv
@@ -16,7 +35,8 @@ NOTIFICATION_SUBJECT = '<b>Plex Collection Cleanup</b>'
 
 def notify_tautulli(body):
     if not TAUTULLI_URL or not TAUTULLI_APIKEY or not TAUTULLI_NOTIFIER_ID:
-        raise ValueError('Tautulli URL, API key or notifier ID not set.')
+        print('Tautulli URL, API key or notifier ID not set. Not sending notification.')
+        return
 
     params = {
         "apikey": TAUTULLI_APIKEY,
