@@ -10,7 +10,9 @@ export JAVA_TOOL_OPTIONS="-Xms64m -Xmx256m -XX:CompressedClassSpaceSize=256m -XX
 SCRIPT=$(realpath "$0")
 SCRIPTPATH=$(dirname "$SCRIPT")
 
+set -o allexport
 source "$SCRIPTPATH/../.env"
+set +o allexport
 # === END ENVIRONMENT ===
 
 # === LOCK ===
