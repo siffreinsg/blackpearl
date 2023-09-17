@@ -61,5 +61,5 @@ if __name__ == '__main__':
     if disk_usage_gb >= DISK_USAGE_THRESHOLD:
         print(f"Disk usage for path {DISK_USAGE_PATH} exceeds threshold of {DISK_USAGE_THRESHOLD} GB.")
         notify_tautulli(
-            f"Path `{DISK_USAGE_PATH}` disk usage is <b>{disk_usage_gb} GB</b> exceeding threshold of <b>{DISK_USAGE_THRESHOLD} GB</b>."
+            f"Path <code>{DISK_USAGE_PATH}</code> disk usage is <b>{disk_usage_gb} GB</b> exceeding threshold of <b>{DISK_USAGE_THRESHOLD} GB</b>."
         )

@@ -144,4 +144,4 @@ if __name__ == '__main__':
             print(f"Update found for {display_name}: {version}.")
             update_version_file(service, version)
 
-            notify_tautulli(f"Mise à jour de <b>{display_name}</b> à la version `{version}` disponible.")
+            notify_tautulli(f"Mise à jour de <b>{display_name}</b> à la version <code>{version}</code> disponible.")
