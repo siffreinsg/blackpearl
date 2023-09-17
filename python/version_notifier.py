@@ -7,19 +7,15 @@ Author:       /u/siffreinsg
 Requires:     dotenv, requests, PyYAML
 
 Environment variables:
-    TAUTULLI_URL            URL of your Tautulli instance.
-    TAUTULLI_APIKEY         API key of your Tautulli instance.
-    GITHUB_TOKEN         GitHub token with access to the repos you want to check.
-    VN_DATA_FOLDER_PATH     Path to the folder where the data will be stored.
-
-Script arguments:
-    --notifier_id [int]     Tautulli notifier ID to use for the notification.
+    TAUTULLI_URL - Tautulli URL
+    TAUTULLI_APIKEY - Tautulli API key
+    TAUTULLI_NOTIFIER_ID - Tautulli notifier ID
+    GITHUB_TOKEN - GitHub token
+    VN_DATA_FOLDER_PATH - Path to the data folder (default: ~/.apps/version-notifier)
 
 Usage:
-    python version_notifier.py --notifier_id 1
+    python version_notifier.py
 '''
-
-import argparse
 import os
 
 import dotenv
@@ -127,10 +123,6 @@ def check_app_update(service):
         return latest # Return the latest release
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--notifier_id', type=int, required=True)
-    opts = parser.parse_args()
-
     initiate_data_store() # Create the data folder if it doesn't exist
     services = load_services() # Load the services to check
 
