@@ -1,5 +1,7 @@
 .venv
 .env
-version-notifier/
-streaming-tag/
+version-notifier/*
+!version-notifier/services.yaml
+streaming-taggerr/*
+!streaming-taggerr/config.sample.yaml
 recyclarr/secrets.yml
