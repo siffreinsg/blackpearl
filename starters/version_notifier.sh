@@ -19,4 +19,4 @@ PYTHON_SCRIPT="$SCRIPTPATH/../python/version_notifier.py"
 # === MAIN SCRIPT ===
 cd "$APP_DIR" || exit 1
 
-"$PYTHON_PATH"/python "$PYTHON_SCRIPT" --notifier_id 2
+"$PYTHON_PATH"/python "$PYTHON_SCRIPT"
