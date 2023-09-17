@@ -30,11 +30,12 @@ import yaml
 dotenv.load_dotenv()
 TAUTULLI_URL = os.getenv('TAUTULLI_URL')
 TAUTULLI_APIKEY = os.getenv('TAUTULLI_APIKEY')
+TAUTULLI_NOTIFIER_ID = os.getenv('TAUTULLI_NOTIFIER_ID')
 GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
 VN_DATA_FOLDER_PATH = os.getenv('VN_DATA_FOLDER_PATH', os.path.join(os.path.expanduser('~'), '.apps/version-notifier'))
 
 # Static values
-NOTIFICATION_SUBJECT = "<b>Tautulli (Black Pearl)</b>"
+NOTIFICATION_SUBJECT = "<b>Version Notifier</b>"
 GITHUB_HEADERS = {
         "Authorization": f"Bearer {GITHUB_TOKEN}",
         "Accept": "application/vnd.github.v3+json"
@@ -85,14 +86,14 @@ def update_version_file(service, version):
         f.write(version)
 
 
-def notify_tautulli(notifier_id, body):
-    if not TAUTULLI_URL or not TAUTULLI_APIKEY:
-        raise ValueError('Tautulli URL or API key not set.')
+def notify_tautulli(body):
+    if not TAUTULLI_URL or not TAUTULLI_APIKEY or not TAUTULLI_NOTIFIER_ID:
+        raise ValueError('Tautulli URL, API key or notifier ID not set.')
 
     params = {
         "apikey": TAUTULLI_APIKEY,
         "cmd": "notify",
-        "notifier_id": notifier_id,
+        "notifier_id": TAUTULLI_NOTIFIER_ID,
         "subject": NOTIFICATION_SUBJECT,
         "body": body
     }
@@ -141,10 +142,7 @@ if __name__ == '__main__':
             release = check_app_update(service)
         except Exception as e:
             print(f"Error while checking updates for {display_name}: {e}")
-            notify_tautulli(
-                opts.notifier_id,
-                f"Erreur lors de la recherche de mises à jour de {display_name}: <pre language=\"python\">{e}</pre>"
-            )
+            notify_tautulli(f"Erreur lors de la recherche de mises à jour de <b>{display_name}</b>: <pre language=\"python\">{e}</pre>")
         else:
             if not release:
                 print(f"No update found for {display_name}.")
@@ -154,7 +152,4 @@ if __name__ == '__main__':
             print(f"Update found for {display_name}: {version}.")
             update_version_file(service, version)
 
-            notify_tautulli(
-                opts.notifier_id,
-                f"Mise à jour de {display_name} à la version {version} disponible."
-            )
+            notify_tautulli(f"Mise à jour de <b>{display_name}</b> à la version `{version}` disponible.")

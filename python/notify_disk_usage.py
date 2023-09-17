@@ -8,47 +8,58 @@ Requires:     subprocess, requests
 
 Tautulli script trigger:
    * Notify on recently added
-Tautulli script arguments:
-   * Recently Added:
-        --homepath "/home/seedbox" --threshold 2500 --notifier_id 2
+
+Environment variables:
+    * TAUTULLI_URL - Tautulli URL, e.g. http://localhost:8181
+    * TAUTULLI_APIKEY - Tautulli API key
+    * TAUTULLI_NOTIFIER_ID - Tautulli notifier ID for the script notification agent
+    * DISK_USAGE_PATH - Path to check disk usage for, default is home directory
+    * DISK_USAGE_THRESHOLD - Disk usage threshold in GB, default is 2500 GB
 
 Usage:
-    python notify_disk_usage.py --homepath "/home/seedbox" --threshold 2500 --notifier_id 2
+    python notify_disk_usage.py
 '''
 
-import argparse
 import os
 import subprocess
 
+import dotenv
 import requests
 
+# Load environment variables
+dotenv.load_dotenv()
 TAUTULLI_URL = os.getenv('TAUTULLI_URL')
 TAUTULLI_APIKEY = os.getenv('TAUTULLI_APIKEY')
+TAUTULLI_NOTIFIER_ID = os.getenv('TAUTULLI_NOTIFIER_ID')
+DISK_USAGE_PATH = os.getenv('DISK_USAGE_PATH', os.path.expanduser('~') + '/')
+DISK_USAGE_THRESHOLD = int(os.getenv('DISK_USAGE_THRESHOLD', 2500))
 
-def notify_tautulli(notifier_id, body):
-    if not TAUTULLI_URL or not TAUTULLI_APIKEY:
-        raise ValueError('Tautulli URL or API key not set.')
+NOTIFICATION_SUBJECT = '<b>Disk Usage</b>'
+
+def notify_tautulli(body):
+    if not TAUTULLI_URL or not TAUTULLI_APIKEY or not TAUTULLI_NOTIFIER_ID:
+        raise ValueError('Tautulli URL, API key or notifier ID not set.')
 
     params = {
         "apikey": TAUTULLI_APIKEY,
         "cmd": "notify",
-        "notifier_id": notifier_id,
-        "subject": '<b>Tautulli (Black Pearl)</b>',
+        "notifier_id": TAUTULLI_NOTIFIER_ID,
+        "subject": NOTIFICATION_SUBJECT,
         "body": body
     }
     requests.get(TAUTULLI_URL.rstrip('/') + '/api/v2', params=params)
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--path', type=str, required=True)
-    parser.add_argument('--threshold', type=int, required=True)
-    parser.add_argument('--notifier_id', type=int, required=True)
-    opts = parser.parse_args()
+    print(f"Checking disk usage for path {DISK_USAGE_PATH}...")
 
-    du_cmd = ['du', '-s', opts.path]
+    du_cmd = ['du', '-s', DISK_USAGE_PATH]
     disk_usage = int(subprocess.check_output(du_cmd).split(maxsplit=1)[0])
-    disk_usage_gb = disk_usage / 1_000_000
+    disk_usage_gb = round(disk_usage / 1_000_000, 2)
 
-    if disk_usage_gb >= opts.threshold:
-        body = f"Path {opts.path} disk usage is {round(disk_usage_gb, 2)} GB."
-        notify_tautulli(opts.notifier_id, body)
+    print(f"Disk usage for path {DISK_USAGE_PATH} is about {disk_usage_gb} GB.")
+
+    if disk_usage_gb >= DISK_USAGE_THRESHOLD:
+        print(f"Disk usage for path {DISK_USAGE_PATH} exceeds threshold of {DISK_USAGE_THRESHOLD} GB.")
+        notify_tautulli(
+            f"Path `{DISK_USAGE_PATH}` disk usage is <b>{disk_usage_gb} GB</b> exceeding threshold of <b>{DISK_USAGE_THRESHOLD} GB</b>."
+        )

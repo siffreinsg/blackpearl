@@ -18,16 +18,19 @@ import requests
 
 TAUTULLI_URL = os.getenv('TAUTULLI_URL')
 TAUTULLI_APIKEY = os.getenv('TAUTULLI_APIKEY')
+TAUTULLI_NOTIFIER_ID = os.getenv('TAUTULLI_NOTIFIER_ID')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--notifier_id', type=int, required=True)
+    parser.add_argument('--notifier_id', type=int, required=False, default=TAUTULLI_NOTIFIER_ID)
     parser.add_argument('--tautulli_url', type=str, required=False, default=TAUTULLI_URL)
     parser.add_argument('--tautulli_apikey', type=str, required=False, default=TAUTULLI_APIKEY)
     opts = parser.parse_args()
 
     if not opts.tautulli_url or not opts.tautulli_apikey:
         raise ValueError('Tautulli URL or API key not set.')
+    if not opts.notifier_id:
+        raise ValueError('Tautulli notifier ID not set.')
 
     body = sys.stdin.read()
 
