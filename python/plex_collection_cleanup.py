@@ -49,12 +49,16 @@ def notify_tautulli(body):
 
 if __name__ == '__main__':
     # Load Plex server
+    print ("Loading Plex server...")
     plex = PlexServer(PLEX_URL, PLEX_TOKEN)
+    print(f"Connected to {plex.friendlyName}.")
 
     # Delete empty collections
     for section in plex.library.sections(): # Loop through sections
+        print(f"Checking section {section.title}...")
         for collection in section.collections(): # Loop through collections in section
+            print(f"Checking collection {collection.title}...")
             if not collection.items(): # If collection is empty
-                print(f"Deleting empty collection {collection.title} from section {section.title}.")
+                print(f"Collection {collection.title} from section {section.title} is empty, deleting...")
                 collection.delete() # Delete collection
                 notify_tautulli(f"Deleted empty collection <b>{collection.title}</b> from section <b>{section.title}</b>.")
