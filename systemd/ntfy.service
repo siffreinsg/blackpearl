@@ -5,6 +5,7 @@ Description=ntfy server
 Type=simple
 ExecStart=/home/siffreinsg/blackpearl/starters/ntfy-server.sh serve
 ExecStop=/bin/kill -s QUIT $MAINPID
+ExecStopPost=/home/siffreinsg/blackpearl/starters/tautulli_notify.sh --subject "<b>Systemd services</b>" --body "Ntfy service stopped running."
 LimitNOFILE=10000
 
 [Install]
