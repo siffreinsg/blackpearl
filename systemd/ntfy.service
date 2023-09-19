@@ -1,16 +1,14 @@
 [Unit]
 Description=ntfy server
+Wants=network-online.target
+After=network-online.target
+OnFailure=notify_onfailure@%i.service
 
 [Service]
 Type=simple
 ExecStart=/home/siffreinsg/blackpearl/starters/ntfy-server.sh serve
 ExecStop=/bin/kill -s QUIT $MAINPID
-ExecStopPost=/home/siffreinsg/blackpearl/starters/tautulli_notify.sh --subject "<b>Systemd services</b>" --body "Ntfy service stopped running."
 LimitNOFILE=10000
 
 [Install]
 WantedBy=default.target
-
-[Unit]
-Wants=network-online.target
-After=network-online.target
