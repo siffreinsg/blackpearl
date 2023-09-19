@@ -1,0 +1,11 @@
+[Unit]
+Description=Version Notifier
+Wants=version_notifier.timer
+
+[Service]
+Type=oneshot
+ExecStart=/home/siffreinsg/blackpearl/starters/version_notifier.sh
+OnFailure=/home/siffreinsg/blackpearl/starters/tautulli_notify.sh --subject "<b>Systemd services</b>" --body "Version Notifier service failed."
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,11 @@
+[Unit]
+Description=Recyclarr Sync timer
+Requires=recyclarr.service
+
+[Timer]
+Unit=recyclarr.service
+Persistent=true
+OnCalendar=*-*-* 03:10:00
+
+[Install]
+WantedBy=timers.target

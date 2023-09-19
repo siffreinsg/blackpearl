@@ -1,0 +1,11 @@
+[Unit]
+Description=Plex Collection Cleanup
+Wants=recyclarr.timer
+
+[Service]
+Type=oneshot
+ExecStart=/home/siffreinsg/blackpearl/starters/plex_collection_cleanup.sh sync
+OnFailure=/home/siffreinsg/blackpearl/starters/tautulli_notify.sh --subject "<b>Systemd services</b>" --body "Plex Collection Cleanup service failed."
+
+[Install]
+WantedBy=multi-user.target

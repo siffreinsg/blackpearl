@@ -1,0 +1,11 @@
+[Unit]
+Description=qBit Manage
+Wants=qbit_manage.timer
+
+[Service]
+Type=oneshot
+ExecStart=/home/siffreinsg/blackpearl/starters/qbit_manage.sh
+OnFailure=/home/siffreinsg/blackpearl/starters/tautulli_notify.sh --subject "<b>Systemd services</b>" --body "qBit Manage service failed."
+
+[Install]
+WantedBy=multi-user.target
