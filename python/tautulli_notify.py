@@ -11,8 +11,15 @@ Environment variables:
     * TAUTULLI_APIKEY - Tautulli API key
     * TAUTULLI_NOTIFIER_ID - Tautulli notifier ID for the script notification agent
 
+Arguments:
+    * --notifier_id [int] - optional, Tautulli notifier ID for the script notification agent (default: env var TAUTULLI_NOTIFIER_ID)
+    * --tautulli_url [str] - optional, Tautulli URL, e.g. http://localhost:8181 (default: env var TAUTULLI_URL)
+    * --tautulli_apikey [str] - optional, Tautulli API key (default: env var TAUTULLI_APIKEY)
+    * --subject [str] - optional, notification subject (default: <b>Tautulli (Black Pearl)</b>)
+    * --body [str] - required, notification body
+
 Usage:
-    echo "Hello world!" | python tautulli_notify.py --notifier_id 2
+    python tautulli_notify.py --notifier_id 2 --subject "Test subject" --body "Test notification"
 '''
 
 import argparse
@@ -30,6 +37,8 @@ if __name__ == '__main__':
     parser.add_argument('--notifier_id', type=int, required=False, default=TAUTULLI_NOTIFIER_ID)
     parser.add_argument('--tautulli_url', type=str, required=False, default=TAUTULLI_URL)
     parser.add_argument('--tautulli_apikey', type=str, required=False, default=TAUTULLI_APIKEY)
+    parser.add_argument('--subject', type=str, required=False, default='<b>Tautulli (Black Pearl)</b>')
+    parser.add_argument('--body', type=str, required=True)
     opts = parser.parse_args()
 
     if not opts.tautulli_url or not opts.tautulli_apikey:
@@ -37,14 +46,13 @@ if __name__ == '__main__':
     if not opts.notifier_id:
         raise ValueError('Tautulli notifier ID not set.')
 
-    body = sys.stdin.read()
-
     params = {
         "apikey": opts.tautulli_apikey,
         "cmd": "notify",
         "notifier_id": opts.notifier_id,
-        "subject": '<b>Tautulli (Black Pearl)</b>',
-        "body": body
+        "subject": opts.subject,
+        "body": opts.body
     }
 
-    requests.get(opts.tautulli_url.rstrip('/') + '/api/v2', params=params)
+    r = requests.get(opts.tautulli_url.rstrip('/') + '/api/v2', params=params)
+    r.raise_for_status()
