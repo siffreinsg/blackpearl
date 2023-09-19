@@ -1,0 +1,9 @@
+[Unit]
+Description=Send notifications via Tautulli on systemd service failure
+
+[Service]
+Type=oneshot
+ExecStart=/home/siffreinsg/blackpearl/starters/tautulli_notify.sh --subject "<b>Systemd services</b>" --body "%i service failed.\n\n$(systemctl status %i)"
+
+[Install]
+WantedBy=multi-user.target

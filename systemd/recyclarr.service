@@ -1,11 +1,11 @@
 [Unit]
 Description=Recyclarr Sync
 Wants=recyclarr.timer
+OnFailure=notify_onfailure@%i.service
 
 [Service]
 Type=oneshot
 ExecStart=/home/siffreinsg/blackpearl/starters/recyclarr.sh sync
-OnFailure=/home/siffreinsg/blackpearl/starters/tautulli_notify.sh --subject "<b>Systemd services</b>" --body "Recyclarr service failed."
 
 [Install]
 WantedBy=multi-user.target
