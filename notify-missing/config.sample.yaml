@@ -1,0 +1,4 @@
+radarr:
+  - host: https://radarrurl.com
+    api_key_env: RADARR_API_KEY
+    missing_hours: 12
