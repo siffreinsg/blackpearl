@@ -5,7 +5,7 @@ OnFailure=notify_onfailure@%i.service
 
 [Service]
 Type=oneshot
-ExecStart=/home/siffreinsg/blackpearl/starters/notify-missing.sh
+ExecStart=/home/siffreinsg/blackpearl/starters/notify_missing.sh
 
 StandardOutput=append:/home/siffreinsg/.apps/notify-missing/last.log
 StandardError=append:/home/siffreinsg/.apps/notify-missing/last.log
