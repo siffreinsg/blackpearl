@@ -5,3 +5,4 @@ version-notifier/*
 streaming-taggerr/*
 !streaming-taggerr/config.sample.yaml
 recyclarr/secrets.yml
+notify-missing/config.yaml
