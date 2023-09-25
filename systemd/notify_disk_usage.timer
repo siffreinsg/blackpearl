@@ -3,7 +3,7 @@ Description=Notify Disk Usage timer
 Requires=notify_disk_usage.service
 
 [Timer]
-Unit=version_notifier.service
+Unit=notify_disk_usage.service
 Persistent=true
 OnCalendar=*-*-* 03:20:00
 
