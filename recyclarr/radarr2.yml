@@ -2,8 +2,6 @@ radarr:
   sqp:
     base_url: https://siffreinsg.ghost.usbx.me/radarr2
     api_key: !secret radarr_sqp_apikey
-    quality_definition:
-      type: sqp-uhd
     delete_old_custom_formats: true
     replace_existing_custom_formats: true
     include:
