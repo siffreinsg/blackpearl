@@ -1,0 +1,11 @@
+[Unit]
+Description=Notify Missing timer
+Requires=notify_missing.service
+
+[Timer]
+Unit=notify_missing.service
+Persistent=true
+OnCalendar=*-*-* 03:25:00
+
+[Install]
+WantedBy=timers.target

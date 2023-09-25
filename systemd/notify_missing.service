@@ -1,0 +1,14 @@
+[Unit]
+Description=Notify Missing
+Wants=notify_missing.timer
+OnFailure=notify_onfailure@%i.service
+
+[Service]
+Type=oneshot
+ExecStart=/home/siffreinsg/blackpearl/starters/notify-missing.sh
+
+StandardOutput=append:/home/siffreinsg/.apps/notify-missing/last.log
+StandardError=append:/home/siffreinsg/.apps/notify-missing/last.log
+
+[Install]
+WantedBy=multi-user.target
