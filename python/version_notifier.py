@@ -8,7 +8,7 @@ Requires:     dotenv, requests, PyYAML
 
 Environment variables:
     * TAUTULLI_URL - Tautulli URL, e.g. http://localhost:8181
-    * TAUTULLI_APIKEY - Tautulli API key
+    * TAUTULLI_API_KEY - Tautulli API key
     * TAUTULLI_NOTIFIER_ID - Tautulli notifier ID for the script notification agent
     * GITHUB_TOKEN - GitHub token, see https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token
     * VN_DATA_FOLDER_PATH - Path to store data, default is ~/.apps/version-notifier
@@ -25,7 +25,7 @@ import yaml
 # Load environment variables
 dotenv.load_dotenv()
 TAUTULLI_URL = os.getenv('TAUTULLI_URL')
-TAUTULLI_APIKEY = os.getenv('TAUTULLI_APIKEY')
+TAUTULLI_API_KEY = os.getenv('TAUTULLI_API_KEY')
 TAUTULLI_NOTIFIER_ID = os.getenv('TAUTULLI_NOTIFIER_ID')
 GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
 VN_DATA_FOLDER_PATH = os.getenv('VN_DATA_FOLDER_PATH', os.path.join(os.path.expanduser('~'), '.apps/version-notifier'))
@@ -83,12 +83,12 @@ def update_version_file(service, version):
 
 
 def notify_tautulli(body):
-    if not TAUTULLI_URL or not TAUTULLI_APIKEY or not TAUTULLI_NOTIFIER_ID:
+    if not TAUTULLI_URL or not TAUTULLI_API_KEY or not TAUTULLI_NOTIFIER_ID:
         print('Tautulli URL, API key or notifier ID not set. Not sending notification.')
         return
 
     params = {
-        "apikey": TAUTULLI_APIKEY,
+        "apikey": TAUTULLI_API_KEY,
         "cmd": "notify",
         "notifier_id": TAUTULLI_NOTIFIER_ID,
         "subject": NOTIFICATION_SUBJECT,
