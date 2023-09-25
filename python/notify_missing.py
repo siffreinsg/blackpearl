@@ -11,7 +11,7 @@ dotenv.load_dotenv()
 TAUTULLI_URL = os.getenv('TAUTULLI_URL')
 TAUTULLI_API_KEY = os.getenv('TAUTULLI_API_KEY')
 TAUTULLI_NOTIFIER_ID = os.getenv('TAUTULLI_NOTIFIER_ID')
-NM_DATA_FOLDER_PATH = os.getenv('NM_DATA_FOLDER_PATH', os.path.join(os.path.expanduser('~'), '.apps/notify-status'))
+NM_DATA_FOLDER_PATH = os.getenv('NM_DATA_FOLDER_PATH', os.path.join(os.path.expanduser('~'), '.apps/notify-missing'))
 
 # Static values
 NOTIFICATION_SUBJECT = "<b>Missing Media</b>"
@@ -49,11 +49,11 @@ def load_config():
         with open(filepath, "r") as f:
             return yaml.safe_load(f)
     except FileNotFoundError:
-        raise Exception("services.yaml not found.")
+        raise Exception("config.yaml not found.")
     except yaml.YAMLError as e:
-        raise Exception(f"Error while parsing services.yaml: {e}")
+        raise Exception(f"Error while parsing config.yaml: {e}")
     except Exception as e:
-        raise Exception(f"Error while loading services.yaml: {e}")
+        raise Exception(f"Error while loading config.yaml: {e}")
 
 
 # ==== RADARR ====
