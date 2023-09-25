@@ -1,0 +1,14 @@
+[Unit]
+Description=Notify Disk Usage
+Wants=notify_disk_usage.timer
+OnFailure=notify_onfailure@%i.service
+
+[Service]
+Type=oneshot
+ExecStart=/home/siffreinsg/blackpearl/starters/notify_disk_usage.sh
+
+StandardOutput=append:/home/siffreinsg/.apps/notify_disk_usage/last.log
+StandardError=append:/home/siffreinsg/.apps/notify_disk_usage/last.log
+
+[Install]
+WantedBy=multi-user.target

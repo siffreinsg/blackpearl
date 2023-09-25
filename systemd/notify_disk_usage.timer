@@ -1,0 +1,11 @@
+[Unit]
+Description=Notify Disk Usage timer
+Requires=notify_disk_usage.service
+
+[Timer]
+Unit=version_notifier.service
+Persistent=true
+OnCalendar=*-*-* 03:20:00
+
+[Install]
+WantedBy=timers.target
