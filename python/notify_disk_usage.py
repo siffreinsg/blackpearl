@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
 '''
 Description:  Send a Tautulli notification when disk usage exceeds a threshold.
 Author:       /u/siffreinsg
@@ -48,7 +45,8 @@ def notify_tautulli(body):
         "subject": NOTIFICATION_SUBJECT,
         "body": body
     }
-    requests.get(TAUTULLI_URL.rstrip('/') + '/api/v2', params=params)
+    r = requests.get(TAUTULLI_URL.rstrip('/') + '/api/v2', params=params)
+    r.raise_for_status()
 
 if __name__ == '__main__':
     print(f"Checking disk usage for path {DISK_USAGE_PATH}...")

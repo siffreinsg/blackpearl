@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
 '''
 Description:  Send a Tautulli notification from command line
 Author:       /u/siffreinsg
@@ -14,7 +11,7 @@ Environment variables:
 Arguments:
     * --notifier_id [int] - optional, Tautulli notifier ID for the script notification agent (default: env var TAUTULLI_NOTIFIER_ID)
     * --tautulli_url [str] - optional, Tautulli URL, e.g. http://localhost:8181 (default: env var TAUTULLI_URL)
-    * --TAUTULLI_API_KEY [str] - optional, Tautulli API key (default: env var TAUTULLI_API_KEY)
+    * --tautulli_api_key [str] - optional, Tautulli API key (default: env var TAUTULLI_API_KEY)
     * --subject [str] - optional, notification subject (default: <b>Tautulli (Black Pearl)</b>)
     * --body [str] - required, notification body
 

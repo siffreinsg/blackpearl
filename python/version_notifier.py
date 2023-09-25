@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
 '''
 Description:  Checks for new releases of apps and sends a Tautulli notification.
 Author:       /u/siffreinsg
@@ -94,7 +91,8 @@ def notify_tautulli(body):
         "subject": NOTIFICATION_SUBJECT,
         "body": body
     }
-    requests.get(TAUTULLI_URL.rstrip('/') + '/api/v2', params=params)
+    r = requests.get(TAUTULLI_URL.rstrip('/') + '/api/v2', params=params)
+    r.raise_for_status()
 
 
 def check_app_update(service):

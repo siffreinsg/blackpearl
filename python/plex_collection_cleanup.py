@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
 '''
 Description:  Deletes empty collections from Plex
 Author:       /u/siffreinsg
