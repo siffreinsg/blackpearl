@@ -8,6 +8,7 @@ OnFailure=notify_onfailure@%i.service
 Type=simple
 ExecStart=/home/siffreinsg/blackpearl/starters/joal.sh
 ExecStop=/bin/kill -s QUIT $MAINPID
+ExecStopPost=systemctl --user start notify_onfailure@%i.service
 LimitNOFILE=10000
 
 [Install]
