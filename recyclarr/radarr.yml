@@ -8,10 +8,10 @@ radarr:
     delete_old_custom_formats: true
     replace_existing_custom_formats: true
     media_naming:
-      folder: default
+      folder: plex
       movie:
         rename: true
-        standard: plex
+        standard: default
     include:
       - template: hd-bluray-web
     custom_formats:
