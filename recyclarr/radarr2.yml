@@ -1,9 +1,15 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/recyclarr/recyclarr/master/schemas/config-schema.json
 radarr:
   sqp:
     base_url: https://siffreinsg.ghost.usbx.me/radarr2
     api_key: !secret radarr_sqp_apikey
     delete_old_custom_formats: true
     replace_existing_custom_formats: true
+    media_naming:
+      folder: default
+      movie:
+        rename: true
+        standard: plex
     include:
       - template: sqp-5
     custom_formats:
