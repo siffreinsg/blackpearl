@@ -1,41 +1,39 @@
 # https://github.com/StuffAnThings/qbit_manage/wiki/Config-Setup
 
 commands:
-  dry_run: false
-  cross_seed: false
-  recheck: false
-  cat_update: true
-  tag_update: true
-  rem_unregistered: false
-  tag_tracker_error: true
-  rem_orphaned: true
-  tag_nohardlinks: true
-  share_limits: true
-  skip_qb_version_check: true
-  skip_cleanup: false
+  dry_run: false # Will not execute any commands, but will print what would be executed.
+  cross_seed: false # Will cross seed torrents from one client to another.
+  recheck: false # Will recheck all torrents.
+  cat_update: true # Will update torrent categories.
+  tag_update: true # Will update torrent tags.
+  rem_unregistered: true # Will remove torrents that are not registered with qBittorrent.
+  tag_tracker_error: true # Will tag torrents that have a tracker error.
+  rem_orphaned: true # Will remove orphaned data.
+  tag_nohardlinks: true # Will tag torrents that have no hardlinks.
+  share_limits: true # Will apply share limits to torrents.
+  skip_qb_version_check: true # Will skip checking qBittorrent version.
+  skip_cleanup: false # Use this to skip emptying the Recycle Bin folder
 
 qbt:
   host: ghost-direct.usbx.me:13241
-  user: CHANGEME
-  pass: CHANGEME
+  user: # Empty, IP whitelisted
+  pass: # Empty, IP whitelisted
 
 settings:
   force_auto_tmm: true # Will force qBittorrent to enable Automatic Torrent Management for each torrent.
   tracker_error_tag: tracker_error # Will set the tag of any torrents that do not have a working tracker.
   nohardlinks_tag: noHL # Will set the tag of any torrents with no hardlinks.
   share_limits_tag: ~share_limit # Will add this tag when applying share limits to provide an easy way to filter torrents by share limit group/priority for each torrent
-  ignoreTags_OnUpdate: # When running tag-update function, it will update torrent tags for a given torrent even if the torrent has at least one or more of the tags defined here. Otherwise torrents will not be t$
-  - noHL
-  - tracker_error
-  - cross-seed
+  ignoreTags_OnUpdate: # When running tag-update function, it will update torrent tags for a given torrent even if the torrent has at least one or more of the tags defined here.
+    - noHL
+    - tracker_error
+    - cross-seed
+    - ~share_limit
 
 directory:
-  cross_seed:
   root_dir: /home/siffreinsg/downloads/qbittorrent
   remote_dir: /home/siffreinsg/downloads/qbittorrent
-  recycle_bin: /home/siffreinsg/downloads/qbittorrent/.RecycleBin
   torrents_dir: /home/siffreinsg/.local/share/qBittorrent/BT_backup
-  orphaned_dir: /home/siffreinsg/downloads/qbittorrent/orphaned_data
 
 cat:
   radarr: /home/siffreinsg/downloads/qbittorrent/radarr
@@ -48,50 +46,61 @@ cat_change:
 
 tracker:
   joinpeers|drago-server:
-    tag: yggtorrent
+    tag:
+      - yggtorrent
+      - private
+  sharewood:
+    tag:
+      - sharewood
+      - private
   other:
-    tag: other
+    tag:
+      - other
+      - public
 
 nohardlinks:
-- radarr-completed
-- radarr-sqp-completed
-- sonarr-completed
+  - radarr-completed
+  - radarr-sqp-completed
+  - sonarr-completed
 
 share_limits:
+  # =====================
+  # *arr torrents with noHL tag
+  # =====================
   arr_noHL_private:
     priority: 1
     include_all_tags:
-    - noHL
-    include_any_tags:
-    - yggtorrent
+      - noHL
+      - private
     categories:
-    - radarr-completed
-    - radarr-sqp-completed
-    - sonarr-completed
+      - radarr-completed
+      - radarr-sqp-completed
+      - sonarr-completed
     max_ratio: 1
     max_seeding_time: 4320 # 3 days
     cleanup: true
   arr_noHL_public:
     priority: 2
     include_all_tags:
-    - noHL
-    exclude_any_tags:
-    - yggtorrent
+      - noHL
+      - public
     categories:
-    - radarr-completed
-    - radarr-sqp-completed
-    - sonarr-completed
+      - radarr-completed
+      - radarr-sqp-completed
+      - sonarr-completed
     max_ratio: 0
     max_seeding_time: 0
     cleanup: true
+  # =====================
+  # Manually added torrents with noHL tag
+  # =====================
   manual_noHL_private:
     priority: 5
     include_all_tags:
-    - noHL
-    - qbittorrent
-    include_any_tags:
-    - yggtorrent
-    max_ratio: 5.0
+      - noHL
+      - qbittorrent
+      - private
+    max_ratio: 5
     max_seeding_time: 129600 # 90 days
     min_seeding_time: 43200 # 30 days
     cleanup: false
@@ -99,38 +108,38 @@ share_limits:
   manual_noHL_public:
     priority: 6
     include_all_tags:
-    - noHL
-    - qbittorrent
-    exclude_any_tags:
-    - yggtorrent
+      - noHL
+      - qbittorrent
+      - public
     max_ratio: 0
     max_seeding_time: 0
     limit_upload_speed: 0
     cleanup: false
+  # =====================
+  # Private torrents
+  # =====================
   private:
     priority: 15
     include_any_tags:
-    - yggtorrent
-    categories:
-    - radarr-completed
-    - radarr-sqp-completed
-    - sonarr-completed
+      - private
     cleanup: true
     max_ratio: -1
     max_seeding_time: -1
     min_seeding_time: 129600 # 90 days
+  # =====================
+  # Public torrents
+  # =====================
   public:
     priority: 20
-    exclude_any_tags:
-    - yggtorrent
-    categories:
-    - radarr-completed
-    - radarr-sqp-completed
-    - sonarr-completed
+    include_any_tags:
+      - public
     max_ratio: 0
     max_seeding_time: 0
     limit_upload_speed: 0
     cleanup: true
+  # =====================
+  # Other torrents
+  # =====================
   default:
     priority: 999
     max_ratio: 1
@@ -138,20 +147,20 @@ share_limits:
     cleanup: false
 
 recyclebin:
-  enabled: true
+  enabled: false
   empty_after_x_days: 7
   save_torrents: true
   split_by_category: true
 
 orphaned:
-  empty_after_x_days: 60
+  empty_after_x_days: 14
   exclude_patterns:
-  - '**/.DS_Store'
-  - '**/Thumbs.db'
-  - '**/@eaDir'
-  - /data/torrents/temp/**
-  - '**/*.!qB'
-  - '**/*_unpackerred'
+    - '**/.DS_Store'
+    - '**/Thumbs.db'
+    - '**/@eaDir'
+    - '**/temp/**'
+    - '**/*.!qB'
+    - '**/*_unpackerred'
 
 webhooks:
   error:
