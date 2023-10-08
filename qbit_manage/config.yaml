@@ -29,6 +29,8 @@ settings:
     - tracker_error
     - cross-seed
     - ~share_limit
+    - private
+    - public
 
 directory:
   root_dir: /home/siffreinsg/downloads/qbittorrent
@@ -65,85 +67,84 @@ nohardlinks:
 
 share_limits:
   # =====================
-  # *arr torrents with noHL tag
+  # Torrents with noHL tag (from *arr)
   # =====================
-  arr_noHL_private:
+  noHL_private: # Delete private torrents after 7 days of seeding
     priority: 1
     include_all_tags:
       - noHL
       - private
-    categories:
-      - radarr-completed
-      - radarr-sqp-completed
-      - sonarr-completed
     max_ratio: 1
-    max_seeding_time: 4320 # 3 days
+    max_seeding_time: 10080 # 7 days
     cleanup: true
-  arr_noHL_public:
+
+  noHL_public: # Delete public torrents immediately
     priority: 2
     include_all_tags:
       - noHL
       - public
+    max_ratio: 0
+    max_seeding_time: 0
+    cleanup: true
+  # =====================
+  # Torrents from *arr
+  # =====================
+  arr_private:
+    priority: 10
+    include_all_tags:
+      - private
+    categories:
+      - radarr-completed
+      - radarr-sqp-completed
+      - sonarr-completed
+    cleanup: false
+    max_ratio: -1
+    max_seeding_time: -1
+
+  arr_public:
+    priority: 15
+    include_all_tags:
+      - public
     categories:
       - radarr-completed
       - radarr-sqp-completed
       - sonarr-completed
     max_ratio: 0
     max_seeding_time: 0
-    cleanup: true
-  # =====================
-  # Manually added torrents with noHL tag
-  # =====================
-  manual_noHL_private:
-    priority: 5
-    include_all_tags:
-      - noHL
-      - qbittorrent
-      - private
-    max_ratio: 5
-    max_seeding_time: 129600 # 90 days
-    min_seeding_time: 43200 # 30 days
-    cleanup: false
-    min_num_seeds: 1
-  manual_noHL_public:
-    priority: 6
-    include_all_tags:
-      - noHL
-      - qbittorrent
-      - public
-    max_ratio: 0
-    max_seeding_time: 0
     limit_upload_speed: 0
-    cleanup: false
-  # =====================
-  # Private torrents
-  # =====================
-  private:
-    priority: 15
-    include_any_tags:
-      - private
     cleanup: true
+  # =====================
+  # Manual torrents
+  # =====================
+  manual_private:
+    priority: 20
+    include_all_tags:
+      - private
+    categories:
+      - qbittorrent
+      - prowlarr
     max_ratio: -1
     max_seeding_time: -1
-    min_seeding_time: 129600 # 90 days
-  # =====================
-  # Public torrents
-  # =====================
-  public:
-    priority: 20
-    include_any_tags:
+    cleanup: false
+
+  manual_public:
+    priority: 25
+    include_all_tags:
       - public
+    categories:
+      - qbittorrent
+      - prowlarr
     max_ratio: 0
     max_seeding_time: 0
     limit_upload_speed: 0
-    cleanup: true
+    cleanup: false
   # =====================
   # Other torrents
   # =====================
   default:
     priority: 999
     max_ratio: 1
-    max_seeding_time: 43200 # 30 days
+    max_seeding_time: 10080 # 7 days
     cleanup: false
 
 recyclebin:
