@@ -27,8 +27,6 @@ settings:
   ignoreTags_OnUpdate: # When running tag-update function, it will update torrent tags for a given torrent even if the torrent has at least one or more of the tags defined here.
     - noHL
     - tracker_error
-    - cross-seed
-    - ~share_limit
     - private
     - public
 
