@@ -1,0 +1,19 @@
+providerRegion: FR
+tag_prefix: "ST: "
+
+providers:
+  - Netflix
+  - Amazon Prime Video
+
+sonarr:
+  - name: Sonarr
+    base_url_env: SONARR_URL
+    api_key_env: SONARR_API_KEY
+
+radarr:
+  - name: Radarr
+    base_url_env: RADARR_URL
+    api_key_env: RADARR_API_KEY
+  - name: Radarr SQP
+    base_url_env: RADARR2_URL
+    api_key_env: RADARR2_API_KEY
