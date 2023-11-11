@@ -119,7 +119,7 @@ if __name__ == '__main__':
                 continue
 
             # Check if the movie is available
-            if movie['status'] != 'released':
+            if movie['status'] != 'released' or "digitalRelease" not in movie:
                 print(f"\t\t - Movie not released yet")
                 continue
             else:
