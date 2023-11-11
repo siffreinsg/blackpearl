@@ -8,6 +8,9 @@ class Radarr:
 
         self.url = url
         self.api_key = api_key
+        self.headers = {
+            'X-Api-Key': api_key
+        }
 
     def get_system_status(self):
         response = requests.get(f'{self.url}/api/v3/system/status?apikey={self.api_key}')

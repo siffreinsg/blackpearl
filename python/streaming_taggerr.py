@@ -46,27 +46,33 @@ if __name__ == '__main__':
         radarr = Radarr(base_url, api_key)
 
         # Get the name of the radarr instance
-        system_status = radarr.get_system_status()
-        instance_name = system_status['instanceName']
+        instance_name = radarr.get_system_status()['instanceName']
         print(f"> Processing {instance_name}.")
 
         # Get existing tags
         existing_tags = radarr.get_tags()
-        print(f"Fetched {len(existing_tags)} tags.")
         st_tags = [tag for tag in existing_tags if tag['label'].startswith(config["tag_prefix"].lower())]
-        wanted_provider_tags = [f"{config['tag_prefix']}{provider}".lower() for provider in config["providers"]]
+        wanted_tags = [f"{config['tag_prefix']}{provider}".lower() for provider in config["providers"]]
+        print(f"Found {len(st_tags)} existing ST tags ({len(existing_tags)} total).")
+
+        tags = {} # Map tag label to tag id
 
         # Delete tags that are no longer in the config
         for tag in st_tags:
-            if tag["label"] not in wanted_provider_tags:
+            if tag["label"] not in wanted_tags:
                 print(f"Deleting tag {tag['label']}...")
                 radarr.delete_tag(tag['id'])
+            else:
+                tags[tag["label"]] = tag["id"] # Add the tag to the map
 
         # Create tags that are in the config but not in the existing tags
-        for provider_tag in wanted_provider_tags:
+        for provider_tag in wanted_tags:
             if not any(tag['label'] == provider_tag for tag in existing_tags):
                 print(f"Creating tag {provider_tag}...")
-                radarr.create_tag(provider_tag)
+                new_tag_id = radarr.create_tag(provider_tag)
+                tags[provider_tag] = new_tag_id # Add the tag to the map
+            else:
+                tags[provider_tag] = next(tag['id'] for tag in existing_tags if tag['label'] == provider_tag) # Add the tag to the map
 
         # Get all movies
         movies = radarr.get_movies()
@@ -86,6 +92,16 @@ if __name__ == '__main__':
                 continue
 
             flatrateProviders = tmdbProviders["results"][config["provider_region"]]["flatrate"]
-            providers = list(map(lambda provider: provider["provider_name"], flatrateProviders))
+            available_providers = set(map(lambda provider: provider["provider_name"], flatrateProviders))
+            wanted_providers = set(config["providers"]).intersection(available_providers)
 
-            print(f"Movie {movie['title']} has flatrate providers: {', '.join(providers)}.")
+            if len(wanted_providers) == 0:
+                print(f"Movie {movie['title']} is not available on any of the wanted providers.")
+                continue
+
+            print(f"Movie {movie['title']} is available on: {', '.join(wanted_providers)}.")
+
+            for provider in wanted_providers:
+                provider_tag = f"{config['tag_prefix']}{provider}".lower()
+                if provider_tag not in movie["tags"]:
+                    radarr.add_movie_tag(movie["id"], tags[provider_tag])
