@@ -3,8 +3,6 @@ radarr:
   hd:
     base_url: https://siffreinsg.ghost.usbx.me/radarr
     api_key: !secret radarr_lq_apikey
-    quality_definition:
-      type: movie
     delete_old_custom_formats: true
     replace_existing_custom_formats: true
     media_naming:
@@ -13,7 +11,11 @@ radarr:
         rename: true
         standard: default
     include:
-      - template: hd-bluray-web
+      # Comment out any of the following includes to disable them
+      - template: radarr-quality-definition-movie
+      - template: radarr-quality-profile-hd-bluray-web
+      - template: radarr-custom-formats-hd-bluray-web
+
     custom_formats:
       # =================================
       # HD Bluray + WEB
